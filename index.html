@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#16766f">
+  <meta name="description" content="適合2至4位國小學生一起玩的SEL情緒成語三關桌遊。">
+  <title>SEL × 成語｜心情冒險</title>
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%2316766f'/%3E%3Ccircle cx='32' cy='32' r='21' fill='%23f7c948'/%3E%3Ccircle cx='25' cy='28' r='2.5' fill='%2320302f'/%3E%3Ccircle cx='39' cy='28' r='2.5' fill='%2320302f'/%3E%3Cpath d='M22 38c6 7 14 7 20 0' fill='none' stroke='%2320302f' stroke-width='4' stroke-linecap='round'/%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div id="app" aria-live="polite"></div>
+  <dialog id="rulesDialog" class="dialog">
+    <button class="dialog-close" type="button" aria-label="關閉規則" onclick="closeRules()">×</button>
+    <div id="rulesContent"></div>
+  </dialog>
+  <dialog id="confirmDialog" class="dialog dialog-small">
+    <h2>要重新開始嗎？</h2>
+    <p>目前的遊戲進度會清除。</p>
+    <div class="dialog-actions">
+      <button class="btn ghost" type="button" onclick="document.getElementById('confirmDialog').close()">繼續遊戲</button>
+      <button class="btn danger" type="button" onclick="resetGame()">重新開始</button>
+    </div>
+  </dialog>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -52,26 +52,58 @@ const SITUATIONS = [
   ["爸爸一教就懂了", "原本不會的題目，爸爸一教，我突然懂了。", "family"]
 ];
 
-const IDIOMS = [
-  ["心花怒放","快樂","心裡像花盛開，形容非常高興。"], ["喜出望外","快樂","遇到意料之外的喜事。"],
-  ["欣喜若狂","快樂","高興到了極點。"], ["眉開眼笑","快樂","臉上充滿喜悅的神情。"],
-  ["樂不可支","快樂","快樂得無法形容或控制。"], ["歡天喜地","快樂","形容非常歡喜。"],
-  ["火冒三丈","憤怒","形容非常生氣。"], ["怒氣沖沖","憤怒","帶著強烈怒氣的樣子。"],
-  ["勃然大怒","憤怒","突然非常憤怒。"], ["怒不可遏","憤怒","憤怒得難以抑制。"],
-  ["咬牙切齒","憤怒","形容極度憤恨。"], ["氣急敗壞","憤怒","又氣又急而失去常態。"],
-  ["悲從中來","悲傷","悲傷從心底湧出。"], ["泣不成聲","悲傷","哭得說不出話。"],
-  ["黯然神傷","悲傷","因失意而默默難過。"], ["心如刀割","悲傷","內心極度痛苦。"],
-  ["悲痛欲絕","悲傷","悲傷痛苦到了極點。"], ["愁眉苦臉","悲傷","滿臉憂愁苦惱。"],
-  ["提心吊膽","恐懼","形容十分擔心害怕。"], ["膽戰心驚","恐懼","非常害怕，心神不安。"],
-  ["心驚膽跳","恐懼","因害怕而心跳加快。"], ["不寒而慄","恐懼","不冷卻發抖，形容非常恐懼。"],
-  ["驚慌失措","恐懼","害怕慌張得不知如何是好。"], ["毛骨悚然","恐懼","形容極度恐懼。"],
-  ["大吃一驚","驚訝","受到意外刺激而十分驚訝。"], ["目瞪口呆","驚訝","驚訝得發愣，說不出話。"],
-  ["瞠目結舌","驚訝","驚訝得張眼說不出話。"], ["出乎意料","驚訝","超出原先的預想。"],
-  ["驚喜交集","驚訝","驚訝與喜悅同時出現。"], ["難以置信","驚訝","事情令人很難相信。"],
-  ["深惡痛絕","厭惡","厭惡痛恨到了極點。"], ["嗤之以鼻","厭惡","用鼻聲表示輕蔑、不認同。"],
-  ["不屑一顧","厭惡","認為不值得一看。"], ["敬而遠之","厭惡","尊敬卻保持距離。"],
-  ["退避三舍","厭惡","主動退讓或避開。"], ["令人作嘔","厭惡","使人噁心、非常厭惡。"]
-].map(([word, emotion, meaning], id) => ({ id, word, emotion, meaning }));
+const IDIOM_GROUPS = [
+  { emotion:"快樂", slug:"joy", cards:[
+    ["心花怒放","心裡像花朵盛開，形容非常高興。"], ["喜出望外","遇到超出預期的喜事，感到特別高興。"],
+    ["欣喜若狂","高興得像快要控制不住自己。"], ["眉開眼笑","眉毛舒展、眼睛帶笑，形容滿臉喜悅。"],
+    ["樂不可支","快樂得幾乎承受不住，形容非常開心。"], ["歡天喜地","形容非常歡喜、高興。"],
+    ["興高采烈","興致很高，情緒熱烈愉快。"], ["手舞足蹈","高興得手腳都舞動起來。"],
+    ["笑逐顏開","笑容展開在臉上，形容滿心喜悅。"], ["喜形於色","喜悅的心情表現在臉色上。"]
+  ]},
+  { emotion:"憤怒", slug:"anger", cards:[
+    ["火冒三丈","形容非常生氣，就像怒火升得很高。"], ["怒氣沖沖","帶著強烈怒氣的樣子。"],
+    ["勃然大怒","突然變得非常憤怒。"], ["怒不可遏","憤怒得難以抑制。"],
+    ["咬牙切齒","咬緊牙齒，形容極度憤恨。"], ["氣急敗壞","又氣又急而失去平常的樣子。"],
+    ["怒髮衝冠","憤怒得頭髮好像豎起，頂住帽子。"], ["暴跳如雷","生氣得大跳大叫，聲音像打雷。"],
+    ["拍案而起","憤怒或激動地拍桌站起來。"], ["義憤填膺","對不公平的事感到憤怒，充滿胸中。"]
+  ]},
+  { emotion:"悲傷", slug:"sadness", cards:[
+    ["悲從中來","悲傷從心底湧上來。"], ["泣不成聲","哭得太厲害，連話都說不出來。"],
+    ["黯然神傷","因失意而默默難過。"], ["心如刀割","心裡像被刀割一樣，形容非常痛苦。"],
+    ["悲痛欲絕","悲傷痛苦到了極點。"], ["愁眉苦臉","皺著眉、苦著臉，形容憂愁苦惱。"],
+    ["淚如雨下","眼淚像下雨一樣不停流。"], ["痛哭流涕","非常傷心地大哭，眼淚鼻涕直流。"],
+    ["愁眉不展","眉頭一直皺著，形容心事重重。"], ["垂頭喪氣","低著頭、精神不振，形容失望難過。"]
+  ]},
+  { emotion:"恐懼", slug:"fear", cards:[
+    ["提心吊膽","形容十分擔心害怕。"], ["膽戰心驚","非常害怕，心神不安。"],
+    ["心驚膽跳","因害怕而心跳加快。"], ["不寒而慄","不冷卻發抖，形容非常恐懼。"],
+    ["驚慌失措","害怕慌張得不知道該怎麼辦。"], ["毛骨悚然","害怕得汗毛豎起，形容極度恐懼。"],
+    ["魂不附體","害怕得像靈魂離開身體，形容非常驚恐。"], ["戰戰兢兢","因害怕而小心發抖的樣子。"],
+    ["心有餘悸","危險過後，想起來仍然感到害怕。"], ["聞風喪膽","聽到一點消息就嚇破膽，形容非常害怕。"]
+  ]},
+  { emotion:"驚訝", slug:"surprise", cards:[
+    ["大吃一驚","受到意外刺激而十分驚訝。"], ["目瞪口呆","驚訝得發愣，說不出話。"],
+    ["瞠目結舌","驚訝得張大眼睛，說不出話。"], ["出乎意料","超出原先的預想。"],
+    ["驚喜交集","驚訝與喜悅同時出現。"], ["難以置信","事情令人很難相信。"],
+    ["始料未及","起初沒有預料到。"], ["意想不到","沒有想到事情會這樣發生。"],
+    ["出人意表","超出大家原先的預料。"], ["晴天霹靂","像晴天突然打雷，比喻突如其來的重大打擊。"]
+  ]},
+  { emotion:"厭惡", slug:"disgust", cards:[
+    ["深惡痛絕","厭惡痛恨到了極點。"], ["嗤之以鼻","用鼻音冷笑，表示輕視或不認同。"],
+    ["不屑一顧","認為不值得看一眼，表示輕視。"], ["敬而遠之","表面尊敬，實際保持距離。"],
+    ["退避三舍","主動退讓或避開，不與對方衝突。"], ["令人作嘔","讓人噁心、非常厭惡。"],
+    ["疾首蹙額","厭惡或憂恨得皺起眉頭。"], ["面目可憎","外表或神情讓人覺得討厭。"],
+    ["不堪入目","內容或景象不好到不能看。"], ["不堪入耳","話語難聽到不能聽下去。"]
+  ]}
+];
+
+const IDIOMS = IDIOM_GROUPS.flatMap((group, groupIndex) => group.cards.map(([word, meaning], index) => ({
+  id: groupIndex * 10 + index,
+  word,
+  emotion: group.emotion,
+  meaning,
+  image: `assets/idioms/${group.slug}/${String(index + 1).padStart(2,"0")}.jpg`
+})));
 
 const PLAYER_COLORS = ["#d74f4f", "#3478bf", "#a56a22", "#7355a6"];
 const CHANCE_CARDS = EMOTIONS.flatMap(e=>[1,2,3].map(points=>({emotion:e.name,points})));
@@ -80,6 +112,7 @@ let setup = { count: 4, level: 1, names: ["玩家1", "玩家2", "玩家3", "玩�
 let state = null;
 let l2MoveTimer = null;
 let l2SkillTimer = null;
+let idiomDbFilter = "全部";
 
 function esc(value = "") {
   return String(value).replace(/[&<>'"]/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[ch]));
@@ -153,7 +186,7 @@ function beginGame() {
 
 function shell(content, side="") {
   return `<div class="app-shell level-${state.level}-shell">
-    <header class="topbar"><div class="brand"><span class="brand-mark">心</span><span>SEL × 成語｜第${state.level}關</span></div><div class="top-actions"><button class="icon-btn" onclick="openRules()" aria-label="查看規則">規則</button><button class="icon-btn" onclick="document.getElementById('confirmDialog').showModal()" aria-label="重新開始">重來</button></div></header>
+    <header class="topbar"><div class="brand"><span class="brand-mark">心</span><span>SEL × 成語｜第${state.level}關</span></div><div class="top-actions"><button class="icon-btn database-btn" onclick="openIdiomDatabase()" aria-label="開啟SEL成語資料庫">成語資料庫</button><button class="icon-btn" onclick="openRules()" aria-label="查看規則">規則</button><button class="icon-btn" onclick="document.getElementById('confirmDialog').showModal()" aria-label="重新開始">重來</button></div></header>
     <main class="game-main">${scoreStrip()}<div class="game-grid"><section class="panel">${content}</section><aside class="panel side-panel">${side || sideInfo()}</aside></div></main>
   </div>`;
 }
@@ -342,6 +375,27 @@ function rulesForLevel(level){
 }
 function openRules(){document.getElementById("rulesContent").innerHTML=rulesForLevel(state?.level||setup.level)+`<p class="safe-note">安全約定：可以跳過；不說真實人名；不評論別人的感受對不對。</p>`;document.getElementById("rulesDialog").showModal();}
 function closeRules(){document.getElementById("rulesDialog").close();}
+function openIdiomDatabase(){
+  idiomDbFilter="全部";
+  renderIdiomDatabase();
+  const dialog=document.getElementById("idiomDatabaseDialog");
+  dialog.showModal();
+  dialog.scrollTop=0;
+  requestAnimationFrame(()=>{dialog.scrollTop=0;});
+}
+function closeIdiomDatabase(){document.getElementById("idiomDatabaseDialog").close();}
+function setIdiomDbFilter(name){idiomDbFilter=name;renderIdiomDatabase();}
+function renderIdiomDatabase(){
+  const visible=idiomDbFilter==="全部"?IDIOMS:IDIOMS.filter(card=>card.emotion===idiomDbFilter);
+  document.getElementById("idiomDatabaseContent").innerHTML=`
+    <div class="library-heading"><div><span class="stage-pill">SEL 學習小幫手</span><h2>情緒成語資料庫</h2><p>共有60張牌卡。選擇情緒類別，看看成語、插圖和意思。</p></div><div class="library-count">${visible.length}<small>張牌卡</small></div></div>
+    <div class="library-filters" role="group" aria-label="依情緒篩選成語">
+      ${["全部",...EMOTIONS.map(e=>e.name)].map(name=>{const e=emotion(name);return `<button class="library-filter ${idiomDbFilter===name?'active':''}" style="--filter-color:${e?.color||'#16766f'}" onclick="setIdiomDbFilter('${name}')">${name}<small>${name==="全部"?"60":10}</small></button>`}).join("")}
+    </div>
+    <div class="idiom-library-grid">
+      ${visible.map(card=>{const e=emotion(card.emotion);return `<article class="idiom-library-card" style="--card-color:${e.color}"><div class="idiom-illustration"><img src="${card.image}" alt="${esc(card.word)}的可愛情境插圖" loading="lazy" decoding="async"></div><div class="idiom-library-copy"><span class="idiom-emotion-tag">${card.emotion}</span><h3>${card.word}</h3><p>${card.meaning}</p></div></article>`}).join("")}
+    </div>`;
+}
 function resetGame(){localStorage.removeItem("sel-idiom-game");state=null;document.getElementById("confirmDialog").close();setupPage();}
 
 function registerWebMcpTools() {

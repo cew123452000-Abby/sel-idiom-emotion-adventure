@@ -28,7 +28,7 @@ const SITUATIONS = [
   ["同學看到我就笑", "同學看到我就笑，一定是在嘲笑我。", "school"],
   ["被誤會故意撞人", "同學不小心踩到我，大家卻說是我故意撞他。", "school"],
   ["又忘了帶文具", "我又忘了帶文具，雖然昨天已被同學提醒很多次。", "school"],
-  ["借物找不到", "我照同學借的東西找不到了，他開始生氣。", "school"],
+  ["借物找不到", "我跟同學借的東西找不到了，他開始生氣。", "school"],
   ["期待終於發生", "我期待的事情今天終於發生了。", "play"],
   ["比想像中順利", "我原本很緊張，結果事情比想像中順利。", "play"],
   ["變得更勇敢", "我發現自己比以前更勇敢了。", "play"],
@@ -51,6 +51,64 @@ const SITUATIONS = [
   ["今天不能出去玩", "我想出去玩，但爸媽說今天不行。", "family"],
   ["爸爸一教就懂了", "原本不會的題目，爸爸一教，我突然懂了。", "family"]
 ];
+
+const EMOTION_WORDS_BY_CATEGORY = {
+  "快樂": ["開心","自豪","安心","感動","期待","興奮","滿足","被重視","感謝","有成就感","放心","愉快"],
+  "憤怒": ["生氣","不滿","煩躁","嫉妒","氣憤","被冒犯"],
+  "悲傷": ["難過","失望","孤單","沮喪","遺憾","無助","心疼","挫折","委屈","愧疚","後悔","懊惱"],
+  "恐懼": ["害怕","緊張","擔心","不安","尷尬","猶豫","焦慮","害羞","著急"],
+  "驚訝": ["驚訝","意外","困惑","好奇","錯愕","驚喜","不知所措"],
+  "厭惡": ["討厭","排斥","不舒服","反感","噁心","想避開","厭煩"]
+};
+
+const EMOTION_WORD_CATEGORY = Object.fromEntries(
+  Object.entries(EMOTION_WORDS_BY_CATEGORY).flatMap(([category,words])=>words.map(word=>[word,category]))
+);
+
+const SITUATION_EMOTION_WORDS = {
+  "突然聽不懂": ["困惑","緊張","不安","擔心","挫折","無助"],
+  "舉手沒被叫到": ["失望","委屈","不滿","難過","挫折","嫉妒"],
+  "只剩我上臺": ["驚訝","緊張","害怕","不安","無助","生氣"],
+  "上課前肚子痛": ["擔心","不安","害怕","不舒服","緊張","無助"],
+  "突然被點名朗讀": ["緊張","害怕","驚訝","不安","害羞","期待"],
+  "被換座位": ["失望","不滿","難過","煩躁","不安","孤單"],
+  "一直被影響": ["煩躁","生氣","不滿","不舒服","挫折","想避開"],
+  "大家認真聽": ["開心","安心","被重視","自豪","感動","期待"],
+  "被兇說不對": ["驚訝","委屈","難過","生氣","害怕","尷尬"],
+  "新同學不說話": ["孤單","失望","困惑","不安","難過","害羞"],
+  "想回答又怕錯": ["緊張","擔心","害怕","猶豫","期待","不安"],
+  "作品被弄壞": ["驚訝","難過","生氣","失望","委屈","心疼"],
+  "作品被展示": ["開心","自豪","驚喜","害羞","興奮","被重視"],
+  "只有別人被稱讚": ["失望","難過","嫉妒","委屈","不滿","挫折"],
+  "老師看見進步": ["開心","自豪","驚喜","安心","感動","有成就感"],
+  "努力被說很簡單": ["委屈","生氣","難過","失望","不滿","挫折"],
+  "祕密被說出去": ["驚訝","生氣","委屈","害怕","不安","失望"],
+  "同學看到我就笑": ["尷尬","害怕","不安","委屈","生氣","困惑"],
+  "被誤會故意撞人": ["委屈","生氣","驚訝","無助","難過","不滿"],
+  "又忘了帶文具": ["尷尬","懊惱","擔心","後悔","挫折","害怕"],
+  "借物找不到": ["緊張","擔心","害怕","愧疚","著急","後悔"],
+  "期待終於發生": ["開心","興奮","期待","驚喜","滿足","感動"],
+  "比想像中順利": ["安心","開心","自豪","驚喜","放心","有成就感"],
+  "變得更勇敢": ["自豪","開心","驚喜","安心","有成就感","興奮"],
+  "大家都比我快": ["失望","沮喪","挫折","尷尬","嫉妒","不安"],
+  "別人都比我厲害": ["沮喪","挫折","嫉妒","失望","不安","難過"],
+  "朋友已經組隊": ["失望","孤單","難過","尷尬","委屈","不安"],
+  "不知道怎麼拒絕": ["猶豫","不安","緊張","擔心","尷尬","困惑"],
+  "朋友主動找我": ["開心","興奮","被重視","驚喜","期待","安心"],
+  "排到就上課了": ["失望","遺憾","難過","不滿","煩躁","委屈"],
+  "弄丟別人的東西": ["緊張","擔心","害怕","愧疚","後悔","無助"],
+  "弟弟不承認": ["生氣","委屈","不滿","難過","失望","厭煩"],
+  "大家向我道謝": ["開心","自豪","感動","被重視","滿足","感謝"],
+  "家裡突然停電": ["害怕","緊張","不安","擔心","孤單","無助"],
+  "玩笑不好笑": ["不舒服","討厭","生氣","委屈","尷尬","反感"],
+  "家人陪我聊天": ["開心","安心","感動","被重視","滿足","感謝"],
+  "努力沒被看見": ["失望","難過","嫉妒","委屈","不滿","孤單"],
+  "被說還太小": ["失望","委屈","不滿","生氣","挫折","無助"],
+  "作業好像做不完": ["擔心","焦慮","挫折","無助","煩躁","厭煩"],
+  "家人覺得我沒做好": ["失望","難過","委屈","挫折","生氣","無助"],
+  "今天不能出去玩": ["失望","難過","不滿","生氣","遺憾","煩躁"],
+  "爸爸一教就懂了": ["驚喜","開心","自豪","安心","有成就感","感謝"]
+};
 
 const IDIOM_GROUPS = [
   { emotion:"快樂", slug:"joy", cards:[
@@ -120,6 +178,8 @@ function esc(value = "") {
 function shuffle(items) { return [...items].sort(() => Math.random() - .5); }
 function randomItem(items) { return items[Math.floor(Math.random() * items.length)]; }
 function emotion(name) { return EMOTIONS.find(e => e.name === name); }
+function emotionForWord(word) { return emotion(EMOTION_WORD_CATEGORY[word] || word) || EMOTIONS[0]; }
+function situationEmotionWords(situation) { return SITUATION_EMOTION_WORDS[situation?.[0]] || EMOTIONS.map(e=>e.name); }
 function save() { if (state) localStorage.setItem("sel-idiom-game", JSON.stringify(state)); }
 
 function setupPage() {
@@ -218,13 +278,13 @@ function renderL1() {
   const owner=state.players[state.current];
   if (state.phase==="draw") app.innerHTML=shell(`<div class="turn-banner"><div class="turn-number">${state.round}</div><div><span class="stage-pill">情緒玩家</span><h2>${esc(owner.name)}，先抽一張情境圖卡</h2></div></div><button class="draw-card" onclick="drawL1Card()" aria-label="抽一張情境圖卡"><span>SEL × 成語</span><strong>點一下抽卡</strong><small>42張生活情境</small></button><p class="safe-note">抽到後先描述事件，再選出「先、再、最後」三個心情。</p>`);
   else if (state.phase==="story") app.innerHTML=shell(`<div class="turn-banner"><div class="turn-number">${state.round}</div><div><span class="stage-pill">情緒玩家</span><h2>${esc(owner.name)}，請描述這個情境</h2></div></div>${situationHtml(state.situation)}<p class="safe-note">可以改說安全的類似經驗；不想回答時可以換卡。</p><div class="action-row"><button class="btn secondary" onclick="drawL1Card()">換一張卡</button><button class="btn" onclick="state.phase='ownerPick';render()">我已描述完畢</button></div>`);
-  else if (state.phase==="ownerPick") app.innerHTML=shell(`<span class="stage-pill">只有情緒玩家看螢幕</span><h2>${esc(owner.name)}，選出3個心情並排序</h2>${situationHtml(state.situation,true)}<p class="muted">看著情境，依序點選「先、再、最後」。點到已選情緒可取消。</p>${sequenceHtml(state.ownerPick)}${emotionButtons(state.ownerPick,"pickOwner")}<div class="action-row"><button class="btn" ${state.ownerPick.length!==3?'disabled':''} onclick="lockOwner()">鎖定答案並交給下一位</button></div>`);
+  else if (state.phase==="ownerPick") app.innerHTML=shell(`<span class="stage-pill">只有情緒玩家看螢幕</span><h2>${esc(owner.name)}，選出3個心情並排序</h2>${situationHtml(state.situation,true)}<p class="muted">以下是適合這張情境卡的情緒詞。依序點選「先、再、最後」；感受沒有唯一答案。</p>${sequenceHtml(state.ownerPick)}${emotionButtons(state.ownerPick,"pickOwner",state.situation)}<div class="action-row"><button class="btn" ${state.ownerPick.length!==3?'disabled':''} onclick="lockOwner()">鎖定答案並交給下一位</button></div>`);
   else if (state.phase==="pass") {
     const observer=state.players[state.observerOrder[state.observerCursor]];
     app.innerHTML=shell(`<div class="pass-screen"><span class="stage-pill">請傳遞裝置</span><p>下一位觀察玩家</p><div class="big-name">${esc(observer.name)}</div><p class="muted">請確認情緒玩家看不到你的選擇。</p><button class="btn" onclick="state.phase='guess';state.guess=[];render()">我是${esc(observer.name)}，開始作答</button></div>`);
   } else if (state.phase==="guess") {
     const observer=state.players[state.observerOrder[state.observerCursor]];
-    app.innerHTML=shell(`<span class="stage-pill">觀察玩家</span><h2>${esc(observer.name)}，你聽見哪3個心情？</h2>${situationHtml(state.situation,true)}<p class="muted">看著情境，依「先、再、最後」點選。情緒與位置都相同才得分。</p>${sequenceHtml(state.guess)}${emotionButtons(state.guess,"pickGuess")}<div class="action-row"><button class="btn" ${state.guess.length!==3?'disabled':''} onclick="scoreGuess()">送出答案</button></div>`);
+    app.innerHTML=shell(`<span class="stage-pill">觀察玩家</span><h2>${esc(observer.name)}，你聽見哪3個心情？</h2>${situationHtml(state.situation,true)}<p class="muted">從這張卡適合的情緒詞中，依「先、再、最後」點選。情緒詞與位置都相同才得分。</p>${sequenceHtml(state.guess)}${emotionButtons(state.guess,"pickGuess",state.situation)}<div class="action-row"><button class="btn" ${state.guess.length!==3?'disabled':''} onclick="scoreGuess()">送出答案</button></div>`);
   } else if (state.phase==="reveal") {
     const r=state.lastResult;
     app.innerHTML=shell(`<span class="stage-pill">答案揭曉</span><h2>${esc(r.name)}得到 ${r.points} 分</h2><div class="result-list">${r.rows.map((x,i)=>`<div class="result-row"><b>${["先","再","最後"][i]}</b><span>情緒玩家：${x.answer}</span><span>你的答案：${x.guess}</span><span class="${x.ok?'correct':'miss'}">${x.ok?'答對':'不同'}</span></div>`).join("")}</div><p class="safe-note">不同不代表錯誤。請用「我聽見……所以我猜……」分享一個判斷線索。</p><button class="btn" onclick="continueL1()">${state.observerCursor<state.observerOrder.length-1?'交給下一位觀察玩家':'完成本回合'}</button>`, bankHtml(state.players[state.observerOrder[state.observerCursor]]));
@@ -236,15 +296,18 @@ function situationHtml(s,compact=false) {
   const labels={school:"在學校與同學相處",play:"玩耍、活動與表現",family:"家庭與日常生活"};
   return `<article class="situation-card ${compact?'compact':''}"><div class="situation-visual"><img src="assets/${category}-situations.png" alt="${labels[category]}情境插圖"></div><div class="situation-copy"><span class="situation-category">${labels[category]}</span><h3>${esc(s[0])}</h3><p>${esc(s[1])}</p></div></article>`;
 }
-function sequenceHtml(seq) { return `<div class="sequence">${[0,1,2].map(i=>`<div class="sequence-slot" style="${seq[i]?`border-color:${emotion(seq[i]).color}`:''}">${["先","再","最後"][i]}${seq[i]?`｜${seq[i]}`:""}</div>`).join("")}</div>`; }
-function emotionButtons(seq,fn) { return `<div class="emotion-grid">${EMOTIONS.map(e=>`<button class="emotion-btn ${seq.includes(e.name)?'selected':''}" style="background:${e.color}" onclick="${fn}('${e.name}')">${e.name}<small>${e.cue}</small></button>`).join("")}</div>`; }
+function sequenceHtml(seq) { return `<div class="sequence">${[0,1,2].map(i=>`<div class="sequence-slot" style="${seq[i]?`border-color:${emotionForWord(seq[i]).color}`:''}">${["先","再","最後"][i]}${seq[i]?`｜${esc(seq[i])}`:""}</div>`).join("")}</div>`; }
+function emotionButtons(seq,fn,situation=null) {
+  const words=situationEmotionWords(situation);
+  return `<div class="emotion-grid context-emotions">${words.map(word=>{const e=emotionForWord(word);return `<button class="emotion-btn ${seq.includes(word)?'selected':''}" style="background:${e.color}" onclick="${fn}('${word}')">${word}<small>${e.name}｜${e.cue}</small></button>`}).join("")}</div>`;
+}
 function pickOwner(name) { togglePick(state.ownerPick,name); render(); }
 function pickGuess(name) { togglePick(state.guess,name); render(); }
 function togglePick(arr,name) { const i=arr.indexOf(name); if(i>=0) arr.splice(i,1); else if(arr.length<3) arr.push(name); }
 function lockOwner() { state.phase="pass"; render(); }
 function scoreGuess() {
   const idx=state.observerOrder[state.observerCursor], player=state.players[idx]; let points=0;
-  const rows=state.ownerPick.map((answer,i)=>{ const ok=answer===state.guess[i]; if(ok){points++; player.banks[answer]=Math.min(10,player.banks[answer]+1);} return {answer,guess:state.guess[i],ok}; });
+  const rows=state.ownerPick.map((answer,i)=>{ const ok=answer===state.guess[i]; if(ok){const category=emotionForWord(answer).name;points++;player.banks[category]=Math.min(10,player.banks[category]+1);} return {answer,guess:state.guess[i],ok}; });
   state.lastResult={name:player.name,points,rows}; state.phase="reveal";
   if (Object.values(player.banks).some(v=>v>=10)) { state.winner=idx; state.ended=true; }
   render();
@@ -293,7 +356,7 @@ function renderL2() {
   } else if(state.phase==="review") app.innerHTML=shell(`${emotionCardHtml(state.tileEmotion)}${l2SkillHtml(state.tileEmotion)}<span class="stage-pill">全組確認</span><h2>這個回答符合 ${state.tileEmotion} 嗎？</h2><div class="review-box"><p><b>${state.challengePoints}分挑戰</b></p><p>${esc(state.challengeAnswer||"（玩家以口頭作答）")}</p></div><p class="safe-note">先說出一項做得好的地方；需要補充時，告訴玩家缺少哪個線索。</p><div class="action-row"><button class="btn secondary" onclick="state.phase='challenge';render()">請補充</button><button class="btn" onclick="approveL2()">通過，得到${state.challengePoints}分</button></div>`);
   else if(state.phase==="skillTarget") app.innerHTML=shell(`${emotionCardHtml(state.tileEmotion)}${l2SkillHtml(state.tileEmotion)}<span class="stage-pill">驚訝｜轉向型</span><h2>指定一位玩家後退</h2><p class="muted">點選玩家後，系統會擲骰決定後退格數。</p><div class="skill-target-grid">${state.players.map((x,i)=>i===state.current?"":`<button class="choice" onclick="resolveSurpriseSkill(${i})"><span class="pawn" style="background:${x.color}"></span>${esc(x.name)}</button>`).join("")}</div>`);
   else if(state.phase==="calming") { app.innerHTML=shell(`${emotionCardHtml(state.tileEmotion)}<section class="calm-card"><span class="stage-pill">悲傷｜沉澱型</span><div class="calm-countdown">${state.calmCount}</div><h2>一起慢慢呼吸、數到10</h2><p>數完後，${esc(p.name)}前進1格。</p></section>`); scheduleL2Calm(); }
-  else if(state.phase==="mission") app.innerHTML=shell(`<span class="mission-badge">情境任務 ${p.missions+1}/3</span><h2>${esc(p.name)}，這個情境可能出現哪種心情？</h2>${situationHtml(state.missionSituation)}${p.missionSwap>0?`<button class="btn secondary mission-swap" onclick="swapMissionL2()">使用「恐懼｜警示型」換一張情境卡（${p.missionSwap}次）</button>`:""}<p class="muted">選一個合理情緒並說明線索，就完成任務。</p>${emotionButtons([],"completeMission")}`);
+  else if(state.phase==="mission") app.innerHTML=shell(`<span class="mission-badge">情境任務 ${p.missions+1}/3</span><h2>${esc(p.name)}，這個情境可能出現哪種心情？</h2>${situationHtml(state.missionSituation)}${p.missionSwap>0?`<button class="btn secondary mission-swap" onclick="swapMissionL2()">使用「恐懼｜警示型」換一張情境卡（${p.missionSwap}次）</button>`:""}<p class="muted">從適合這張卡的情緒詞中選一個，再說出情境線索，就完成任務。</p>${emotionButtons([],"completeMission",state.missionSituation)}`);
 }
 function rollL2() {
   state.dice=1+Math.floor(Math.random()*6);state.moveProgress=0;state.challengePoints=null;state.challengeAnswer="";state.skillUsedThisTurn=false;state.skillMessage="";state.phase="moving";render();
@@ -306,7 +369,7 @@ function advanceL2Piece(){
 }
 function reviewL2(){state.challengeAnswer=document.getElementById("challengeAnswer").value.trim();state.phase="review";render();}
 function approveL2(){const p=state.players[state.current];p.score+=state.challengePoints;p.missionProgress+=state.challengePoints;if(p.missionProgress>=3){p.missionProgress-=3;state.missionSituation=randomItem(SITUATIONS);state.phase="mission";}else nextL2();render();}
-function completeMission(name){state.players[state.current].missions++;state.lastMissionEmotion=name;if(state.players[state.current].missions>=3){state.winner=state.current;state.ended=true;}else nextL2();render();}
+function completeMission(name){state.players[state.current].missions++;state.lastMissionEmotion=emotionForWord(name).name;state.lastMissionEmotionWord=name;if(state.players[state.current].missions>=3){state.winner=state.current;state.ended=true;}else nextL2();render();}
 function useL2Skill(){
   if(state.skillUsedThisTurn)return;
   const p=state.players[state.current], name=state.tileEmotion;state.skillUsedThisTurn=true;
@@ -362,14 +425,50 @@ function useSkill(index){
 }
 function rollL3(){state.dice=1+Math.floor(Math.random()*6);const p=state.players[state.current];p.position=(p.position+state.dice+(state.l3Bonus||0))%30;state.current=(state.current+1)%state.players.length;state.turn++;state.round=Math.floor(state.turn/state.players.length)+1;state.phase="select";state.selectedSituation=null;state.selectedIdioms=[];state.l3Bonus=0;state.lastChance=null;render();}
 
+function ensureReflections(){
+  state.reflections=state.players.map((_,i)=>({
+    emotionA:"",emotionB:"",idiom:"",reason:"",strategy:"",
+    ...(state.reflections?.[i]||{})
+  }));
+  if(!Number.isInteger(state.reflectionPlayer)||state.reflectionPlayer<0||state.reflectionPlayer>=state.players.length)state.reflectionPlayer=0;
+}
+function reflectionComplete(index){const r=state.reflections?.[index];return !!r&&["emotionA","emotionB","idiom","reason","strategy"].every(key=>r[key]?.trim());}
+function reflectionPanelHtml(){
+  ensureReflections();
+  const i=state.reflectionPlayer,p=state.players[i],r=state.reflections[i];
+  return `<section class="reflection-panel"><span class="stage-pill">我的遊戲收穫</span><h3>完成離場小任務</h3><p class="muted">請每位玩家輪流填寫，完成後就能取得自己的參與證書。</p><div class="reflection-tabs" role="tablist" aria-label="選擇填寫玩家">${state.players.map((player,index)=>`<button class="reflection-tab ${i===index?'active':''} ${reflectionComplete(index)?'done':''}" type="button" onclick="setReflectionPlayer(${index})">${esc(player.name)}${reflectionComplete(index)?'<span>完成</span>':''}</button>`).join("")}</div><div class="reflection-form" style="--player-color:${p.color}"><h4>${esc(p.name)}的學習收穫</h4><label>今天我更能分辨<div class="sentence-inputs"><input maxlength="12" value="${esc(r.emotionA)}" placeholder="情緒詞1" oninput="updateReflection(${i},'emotionA',this.value)"><span>和</span><input maxlength="12" value="${esc(r.emotionB)}" placeholder="情緒詞2" oninput="updateReflection(${i},'emotionB',this.value)"></div></label><label>我想帶走的成語是<input maxlength="16" value="${esc(r.idiom)}" placeholder="填入一個成語" oninput="updateReflection(${i},'idiom',this.value)"></label><label>因為<input maxlength="40" value="${esc(r.reason)}" placeholder="它讓我想到……" oninput="updateReflection(${i},'reason',this.value)"></label><label>下次遇到相似情境，我可以先<input maxlength="40" value="${esc(r.strategy)}" placeholder="寫下可行的方法" oninput="updateReflection(${i},'strategy',this.value)"></label><button id="certificateButton-${i}" class="btn certificate-open-btn" type="button" ${reflectionComplete(i)?'':'disabled'} onclick="openCertificate(${i})">完成並查看我的證書</button><p class="reflection-hint" id="reflectionHint-${i}">${reflectionComplete(i)?'已完成，可以打開個人證書。':'填完五個空格後，就能打開個人證書。'}</p></div></section>`;
+}
+function setReflectionPlayer(index){state.reflectionPlayer=index;save();renderEnd();}
+function updateReflection(index,key,value){
+  ensureReflections();state.reflections[index][key]=value;save();
+  const complete=reflectionComplete(index),button=document.getElementById(`certificateButton-${index}`),hint=document.getElementById(`reflectionHint-${index}`);
+  if(button)button.disabled=!complete;
+  if(hint)hint.textContent=complete?'已完成，可以打開個人證書。':'填完五個空格後，就能打開個人證書。';
+}
+function certificateResultText(player){
+  if(state.level===1)return `情緒存摺最高累積 ${Math.max(...Object.values(player.banks))}/10 點`;
+  if(state.level===2)return `完成 ${player.missions} 張情境卡，共獲得 ${player.score} 分`;
+  const top=topEmotion(player);return `${top.name}情緒累積 ${top.points}/10 點，完成 ${player.completed} 次配對`;
+}
+function openCertificate(index){
+  ensureReflections();if(!reflectionComplete(index))return;
+  const p=state.players[index],r=state.reflections[index];
+  const date=new Intl.DateTimeFormat("zh-TW",{year:"numeric",month:"long",day:"numeric"}).format(new Date());
+  document.getElementById("certificateContent").innerHTML=`<article class="certificate-card" style="--player-color:${p.color}"><div class="certificate-kicker">SEL × 成語｜心情冒險</div><h2>參與證書</h2><p class="certificate-lead">恭喜</p><div class="certificate-name">${esc(p.name)}</div><p>完成第 ${state.level} 關的情緒辨識、表達與成語學習任務</p><div class="certificate-score">${esc(certificateResultText(p))}</div><div class="certificate-reflections"><p><b>我更能分辨：</b>${esc(r.emotionA)}和${esc(r.emotionB)}</p><p><b>我想帶走的成語：</b>${esc(r.idiom)}，因為${esc(r.reason)}</p><p><b>我的下一步：</b>${esc(r.strategy)}</p></div><div class="certificate-footer"><span>${date}</span><strong>心情冒險完成紀念</strong></div></article><div class="certificate-actions"><button class="btn secondary" type="button" onclick="closeCertificate()">返回修改</button><button class="btn" type="button" onclick="printCertificate()">列印／存成 PDF</button></div>`;
+  document.getElementById("certificateDialog").showModal();
+}
+function closeCertificate(){document.getElementById("certificateDialog").close();}
+function printCertificate(){window.print();}
+
 function renderEnd(){
   const ranked=[...state.players].sort((a,b)=>state.level===1?Math.max(...Object.values(b.banks))-Math.max(...Object.values(a.banks)):state.level===2?b.missions-a.missions||b.score-a.score:topEmotion(b).points-topEmotion(a).points||b.completed-a.completed);
   const winner=state.winner!==undefined?state.players[state.winner]:ranked[0];
-  app.innerHTML=shell(`<div class="end-screen"><span class="stage-pill">遊戲結束</span><h2>${esc(winner.name)}完成心情冒險！</h2><p>${state.level===3?`${topEmotion(winner).name}情緒率先累積10點！`:"每個人的感受都值得被聽見。分數記錄的是傾聽、表達與成語運用的練習。"}</p><div class="podium">${ranked.map((p,i)=>`<div class="podium-row"><b>${i+1}</b><div class="chip-line"><span class="pawn" style="background:${p.color}"></span>${esc(p.name)}</div><strong>${state.level===1?`${Math.max(...Object.values(p.banks))}/10`:state.level===2?`${p.missions}張・${p.score}分`:`${topEmotion(p).name} ${topEmotion(p).points}/10`}</strong></div>`).join("")}</div><div class="action-row" style="justify-content:center"><button class="btn secondary" onclick="setupPage()">回到選單</button><button class="btn" onclick="setupPage();localStorage.removeItem('sel-idiom-game')">開始新遊戲</button></div></div>`, `<h3>離場小任務</h3><div class="mini-rule">今天我更能分辨＿＿和＿＿。</div><div class="mini-rule">我想帶走的成語是＿＿，因為＿＿。</div><div class="mini-rule">下次遇到相似情境，我可以先＿＿。</div>`);
+  ensureReflections();
+  app.innerHTML=shell(`<div class="end-screen"><span class="stage-pill">遊戲結束</span><h2>${esc(winner.name)}完成心情冒險！</h2><p>${state.level===3?`${topEmotion(winner).name}情緒率先累積10點！`:"每個人的感受都值得被聽見。分數記錄的是傾聽、表達與成語運用的練習。"}</p><div class="podium">${ranked.map((p,i)=>`<div class="podium-row"><b>${i+1}</b><div class="chip-line"><span class="pawn" style="background:${p.color}"></span>${esc(p.name)}</div><strong>${state.level===1?`${Math.max(...Object.values(p.banks))}/10`:state.level===2?`${p.missions}張・${p.score}分`:`${topEmotion(p).name} ${topEmotion(p).points}/10`}</strong></div>`).join("")}</div><p class="certificate-reminder">每位玩家完成旁邊的學習收穫，就能取得自己的參與證書。</p><div class="action-row" style="justify-content:center"><button class="btn secondary" onclick="setupPage()">回到選單</button><button class="btn" onclick="setupPage();localStorage.removeItem('sel-idiom-game')">開始新遊戲</button></div></div>`,reflectionPanelHtml());
 }
 
 function rulesForLevel(level){
-  if(level===1)return `<h2>第一關｜情緒偵探所</h2><ol class="rules-list"><li>情緒玩家先抽1張情境圖卡，再描述卡上情境或安全的類似經驗，先不說情緒名稱。</li><li>情緒玩家選3個心情，依「先、再、最後」排序並鎖定。</li><li>其他玩家依序拿裝置作答；答案會在每人作答後揭曉。</li><li>同一位置的情緒相同得1分，分數加到觀察玩家對應的情緒存摺。</li><li>任一情緒滿10分，或完成3輪，遊戲結束。</li></ol>`;
+  if(level===1)return `<h2>第一關｜情緒偵探所</h2><ol class="rules-list"><li>情緒玩家先抽1張情境圖卡，再描述卡上情境或安全的類似經驗，先不說情緒名稱。</li><li>每張情境卡會提供6個貼近情境的情緒詞；情緒玩家選3個，依「先、再、最後」排序並鎖定。</li><li>其他玩家依序拿裝置，從同一組情緒詞中作答；答案會在每人作答後揭曉。</li><li>同一位置的情緒詞相同得1分，分數會依所屬六大情緒加到觀察玩家的存摺。</li><li>任一情緒滿10分，或完成3輪，遊戲結束。</li></ol>`;
   if(level===2)return `<h2>第二關｜情緒成語大富翁</h2><ol class="rules-list"><li>擲骰前進到不同顏色的情緒格，畫面會顯示抽到的情緒牌卡。</li><li>每次抵達情緒格，可選擇發動1次該牌卡的情緒技能。</li><li>聯想得1分、生活情境得2分、成語並造句得3分。</li><li>全組按「通過」確認；若線索不足，可請玩家補充。</li><li>每累積3分，完成1張情境任務；第一位完成3張情境卡的玩家獲勝。</li></ol>`;
   return `<h2>第三關｜成語心情冒險島</h2><ol class="rules-list"><li>每位玩家有5張成語卡與3張情境卡。</li><li>選1張情境，打出1–2張適合的成語卡並說明。</li><li>打出2張時，要說出「先……後……」的情緒變化。</li><li>配對成功即完成任務，可抽1張機會牌；系統會自動記錄牌上的情緒與1～3點。</li><li>收下點數後擲骰前進；任一情緒最先累積10點的玩家獲勝。</li></ol>`;
 }

@@ -1,0 +1,29 @@
+{
+  "id": "./",
+  "name": "SEL × 成語｜心情冒險",
+  "short_name": "心情冒險",
+  "description": "適合2至4位國小學生一起玩的SEL情緒成語三關遊戲。",
+  "lang": "zh-Hant-TW",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#fffdf6",
+  "theme_color": "#16766f",
+  "categories": ["education", "games"],
+  "prefer_related_applications": false,
+  "icons": [
+    {
+      "src": "assets/icons/app-icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any"
+    },
+    {
+      "src": "assets/icons/app-icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any"
+    }
+  ]
+}

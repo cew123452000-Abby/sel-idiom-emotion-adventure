@@ -171,6 +171,7 @@ let state = null;
 let l2MoveTimer = null;
 let l2SkillTimer = null;
 let idiomDbFilter = "全部";
+let deferredInstallPrompt = null;
 
 function esc(value = "") {
   return String(value).replace(/[&<>'"]/g, ch => ({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[ch]));
@@ -208,6 +209,7 @@ function setupPage() {
           <div class="action-row">
             <button class="btn wide" type="submit">開始第 ${setup.level} 關</button>
             ${saved ? `<button class="btn secondary wide" type="button" onclick="continueGame()">繼續上次遊戲</button>` : ""}
+            <button class="btn ghost wide install-entry" type="button" onclick="openInstallHelp()">安裝到 iPad 主畫面</button>
           </div>
         </form>
       </section>
@@ -483,6 +485,25 @@ function openIdiomDatabase(){
   requestAnimationFrame(()=>{dialog.scrollTop=0;});
 }
 function closeIdiomDatabase(){document.getElementById("idiomDatabaseDialog").close();}
+function isStandalonePwa(){return window.matchMedia("(display-mode: standalone)").matches || window.navigator.standalone===true;}
+function openInstallHelp(){
+  const status=document.getElementById("installStatus");
+  const installButton=document.getElementById("installNowButton");
+  const installed=isStandalonePwa();
+  status.innerHTML=installed
+    ? `<p class="install-ready"><strong>已安裝完成</strong><br>您目前正在主畫面版本中使用遊戲。</p>`
+    : `<p><strong>安裝後會出現在 iPad 主畫面。</strong><br>首次完整開啟後，系統會保存遊戲與60張成語插圖，斷網也能使用。</p>`;
+  installButton.hidden=installed || !deferredInstallPrompt;
+  document.getElementById("installDialog").showModal();
+}
+function closeInstallHelp(){document.getElementById("installDialog").close();}
+async function promptPwaInstall(){
+  if(!deferredInstallPrompt)return openInstallHelp();
+  deferredInstallPrompt.prompt();
+  await deferredInstallPrompt.userChoice;
+  deferredInstallPrompt=null;
+  closeInstallHelp();
+}
 function setIdiomDbFilter(name){idiomDbFilter=name;renderIdiomDatabase();}
 function renderIdiomDatabase(){
   const visible=idiomDbFilter==="全部"?IDIOMS:IDIOMS.filter(card=>card.emotion===idiomDbFilter);
@@ -496,6 +517,19 @@ function renderIdiomDatabase(){
     </div>`;
 }
 function resetGame(){localStorage.removeItem("sel-idiom-game");state=null;document.getElementById("confirmDialog").close();setupPage();}
+
+function registerPwa(){
+  window.addEventListener("beforeinstallprompt",event=>{
+    event.preventDefault();
+    deferredInstallPrompt=event;
+  });
+  window.addEventListener("appinstalled",()=>{deferredInstallPrompt=null;});
+  if("serviceWorker" in navigator && /^https?:$/.test(location.protocol)){
+    window.addEventListener("load",()=>{
+      navigator.serviceWorker.register("./sw.js").catch(error=>console.warn("PWA 離線服務註冊失敗",error));
+    });
+  }
+}
 
 function registerWebMcpTools() {
   const context = document.modelContext;
@@ -542,3 +576,4 @@ function registerWebMcpTools() {
 
 setupPage();
 registerWebMcpTools();
+registerPwa();

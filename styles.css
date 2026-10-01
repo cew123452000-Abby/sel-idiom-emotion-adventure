@@ -98,6 +98,13 @@ h1 { margin: 8px 0 10px; font-size: clamp(2.2rem, 6vw, 4.4rem); line-height: 1.0
 .btn.ghost { background: transparent; color: var(--teal); box-shadow: none; border: 2px solid var(--teal); }
 .btn.wide { width: 100%; min-height: 58px; font-size: 1.08rem; }
 .action-row { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
+.install-entry { border-color: #16766f; background: #f2fbf8; }
+.install-dialog h2 { margin: 10px 42px 8px 0; font-size: clamp(1.55rem,5vw,2rem); }
+.install-status { margin: 12px 0 16px; padding: 13px 15px; border-radius: 15px; background: #e7f5f1; color: #284b47; }
+.install-status p { margin: 0; }
+.install-ready { color: #0e5752; }
+.install-steps { margin: 0 0 18px; padding-left: 1.5rem; }
+.install-steps li { margin-bottom: 10px; }
 
 .game-main { width: min(1180px, 100%); margin: 0 auto; padding: 18px clamp(12px, 2.5vw, 28px) 40px; }
 .status-strip { display: flex; gap: 10px; overflow-x: auto; padding: 2px 0 12px; scrollbar-width: thin; }
